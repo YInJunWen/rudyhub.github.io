@@ -1,6 +1,7 @@
 {
   "rmedia":{
     "version":"1.0.0",
+	"os": ["x64","x86"],
     "download":"http://assets.wenweipo.com/software/",
     "help":"https://rudyhub.github.io/#/rmedia",
     "feature": ["视频压缩视频","音频截取片段视频","图片输出带缩略图","logo添加视频","音频分离","序列图转gif动图或视频","屏幕录制","PDF转图片","图片拼接","音/视频拼接","音/视频混合等。"],
