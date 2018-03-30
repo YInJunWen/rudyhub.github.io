@@ -1,5 +1,5 @@
 {
-  "rmedia":{
+  "RMedia":{
     "version":"1.0.0",
 	"os": ["x64","x86"],
     "download":"http://assets.wenweipo.com/software/",
