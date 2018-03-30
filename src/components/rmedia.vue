@@ -1,24 +1,54 @@
 <template>
   <div class="rmedia" data-version="1.0.0" data-loadurl="http://assets.wenweipo.com/software/RMedia1.0.0x64.zip">
-    <h1>RMedia1.0.0操作介绍</h1>
-    <h2>目录</h2>
-    <tree :tree="tree"></tree>
-    <section v-for="(item, index) of tree" v-bind:key="index">
-      <h2 :id="item.id">{{item.name}}</h2>
-      <article v-if="item.tree" v-for="(art, artkey) of item.tree" v-bind:key="artkey">
-        <h3 :id="art.id">{{art.name}}:</h3>
-        <div v-if="art.content" v-html="art.content"></div>
-      </article>
-      <hr>
-    </section>
+    <div class="rmedia-header">
+      <h1 class="rmedia-h1">
+        <span class="letter" data-letter="R">R</span>
+        <span class="letter" data-letter="M">M</span>
+        <span class="letter" data-letter="e">e</span>
+        <span class="letter" data-letter="d">d</span>
+        <span class="letter" data-letter="i">i</span>
+        <span class="letter" data-letter="a">a</span>
+        <small class="rmedia-h1-v">1.0.0操作介绍</small>
+      </h1>
+    </div>
+    <div class="rmedia-main">
+      <h2 class="rmedia-h2">目录</h2>
+      <tree :tree="tree"></tree>
+      <section v-for="(item, index) of tree" v-bind:key="index">
+        <h2 class="rmedia-h2" :id="item.id">{{(index + 1) + ' - ' + item.name}}</h2>
+        <article v-if="item.tree" v-for="(art, artkey) of item.tree" v-bind:key="artkey">
+          <h3 class="rmedia-h3" :id="art.id">{{(index+1) + '.' + (artkey+1) + ' - ' + art.name}}:</h3>
+          <div class="rmedia-art-content" v-if="art.content" v-html="art.content"></div>
+        </article>
+        <hr>
+      </section>
+      ...
+    </div>
   </div>
 </template>
 
 <script>
-import tree from './tree.vue'
 export default {
   name: 'rmedia',
-  components: { tree },
+  components: {
+    tree: {
+      name: 'tree',
+      template: `
+      <ul class="tree">
+        <li class="tree-item" v-for="(item, index) in tree" v-bind:key="index">
+          <div class="tree-name" v-on:click="goAnchor(item.id)">{{item.name}}</div>
+          <tree v-if="item.tree" :tree="item.tree"></tree>
+        </li>
+      </ul>`,
+      props: ['tree'],
+      methods: {
+        goAnchor (id) {
+          let anchor = document.getElementById(id).getBoundingClientRect()
+          document.documentElement.scrollTop = document.body.scrollTop = anchor.top
+        }
+      }
+    }
+  },
   data () {
     return {
       title: 'RMedia1.0.0操作介绍',
@@ -36,7 +66,7 @@ export default {
         }, {
           id: 't1-3',
           name: '一些操作按钮介绍',
-          content: `<p><img class="float-r margin-l" src="../assets/rmedia/img/00.jpg" alt=""></p>
+          content: `<p><img class="float-r margin-l" src="./static/rmedia/img/00.jpg" alt=""></p>
           <p>菜单栏的滑杆：控制视图大小。</p>
           <p>预览窗口下三个图标按钮：左到右分别是：【锁定/解锁】、【显示/隐藏透明区】、【删除】。这些按钮共同特性是，左击只操作对应文件，右击操作所有文件。</p>
           <p>【锁定/解锁】：相当于【选择/反选】，大部分功能只对锁定的文件处理，会忽略解锁状态的文件。</p>
@@ -49,7 +79,7 @@ export default {
         tree: [{
           id: 't2-1',
           name: '视频压缩',
-          content: `<img class="float-r margin-l" src="../assets/rmedia/img/01.jpg" alt="参数图">
+          content: `<img class="float-r margin-l" src="./static/rmedia/img/01.jpg" alt="参数图">
           <p><b>主要参数：</b></p>
           <p>输出名称：默认会在原名称前加全局命名参数的前缀，如：RMedia_。</p>
           <p>输出格式：默认输出mp4。一般情况下拉菜单中可选择的格式都是允许输出的格式，一些除特殊情况除外。</p>
@@ -58,7 +88,7 @@ export default {
         }, {
           id: 't2-2',
           name: '视频、音频截取片段',
-          content: `<img class="float-r margin-l" src="../assets/rmedia/img/02.jpg" alt="参数图">
+          content: `<img class="float-r margin-l" src="./static/rmedia/img/02.jpg" alt="参数图">
           <p><b>主要参数：</b></p>
           <p>时间控制：滑杆滑块取时间位置，下方左右按钮可以微调精确到帧，按钮之间的参数是每点击一次跳多少帧，默认为2帧。</p>
           <p>
@@ -68,9 +98,9 @@ export default {
         }, {
           id: 't2-3',
           name: '视频、图片输出带缩略图',
-          content: `<p>关闭状态 ==>> 开启状态</p>
-          <img class="float-l margin-r" src="../assets/rmedia/img/03-1.jpg">
-          <img class="float-l margin-r" src="../assets/rmedia/img/03-2.jpg">
+          content: `<p>左图：关闭状态 | 右图：开启状态</p>
+          <img class="float-l margin-r" src="./static/rmedia/img/03-1.jpg">
+          <img class="float-l margin-r" src="./static/rmedia/img/03-2.jpg">
           <div class="clear">
             <p>开启后，将同时输出一个缩略图。即，假如需要压缩视频并输出缩略图，只需要勾选此项即同时处理，输出两个文件。</p>
             <p><b>主要参数：</b></p>
@@ -80,7 +110,7 @@ export default {
         }, {
           id: 't2-4',
           name: 'logo添加',
-          content: `<img class="float-r margin-l" src="../assets/rmedia/img/04.jpg">
+          content: `<img class="float-r margin-l" src="./static/rmedia/img/04.jpg">
           <p>
             logo控制面板中，第一行按钮从左到右分别是：【添加logo】、【删除logo】、【设置logo显示的起始时间】、【设置logo显示的终止时间】。设置logo显示的起始/终止时间与截取片段的操作完全一样的，需要注意的是，logo显示的时间段在上方时间控制滑杆的显示颜色是红色区段。</p>
           <p>尺寸比例：调节logo与视频的比例。对比例为敏感的童鞋要注意了，在预览窗看到的logo大小不会是输出结果的大小，最好滑动菜单栏后的控制杆放大到视频输出的大小相当进行观察，也可以先输出一小段试看找感觉。</p>
@@ -90,9 +120,9 @@ export default {
         }, {
           id: 't2-5',
           name: '视频、音频分离',
-          content: `<p>关闭状态 ==>> 开启状态</p>
-          <img class="float-l margin-r" src="../assets/rmedia/img/05-1.jpg">
-          <img class="float-l margin-r" src="../assets/rmedia/img/05-2.jpg">
+          content: `<p>左图：关闭状态 | 右图：开启状态</p>
+          <img class="float-l margin-r" src="./static/rmedia/img/05-1.jpg">
+          <img class="float-l margin-r" src="./static/rmedia/img/05-2.jpg">
           <div class="clear">
             <p>如果是视频，并且有声音，它将分离出无声的视频和左、右声道三个文件（如果是单声道即非立体声，则输出一个视频，一个音频）。</p>
             <p>如果是音频，并且不是单声道，则它会将左、右声道分离两个文件。</p>
@@ -100,7 +130,7 @@ export default {
         }, {
           id: 't2-6',
           name: '序列图转gif动图或视频',
-          content: `<img class="float-r margin-l" src="../assets/rmedia/img/06.jpg">
+          content: `<img class="float-r margin-l" src="./static/rmedia/img/06.jpg">
           <p>当输入的是图片文件时，序列图选框会自动显示，如果决定输入序列图片转为gif动图，需要满足以下条件：</p>
           <ol>
             <li>图片的命名末尾必须是有规律的数字如：image01.jpg、image02.jpg、image03.jpg...，或 01.jpg、02.jpg、03.jpg...。数字的个数应大于图片总数的位数。</li>
@@ -112,7 +142,7 @@ export default {
       }, {
         id: 't3',
         name: '全局参数面板介绍',
-        content: `<img class="float-r margin-l" src="../assets/rmedia/img/07.jpg" alt="">
+        content: `<img class="float-r margin-l" src="./static/rmedia/img/07.jpg" alt="">
         <p>实际上就是对所有（锁定）文件进行统一调控。部分功能除外。</p>
         <p>压缩速度级别：是对压缩时处理的速度设置，越快需要的时间越少，但处理的效果会相对差。从实验中看，实际上各级别的时间差别不大，一般保持默认即可。</p>
         <p>宽度、高度上限：规定视频的最大度、最大高度，有时候竖屏的视频可能需要对高度进行修改。本项只对（锁定的）视频有效，对图片等无效。</p>
@@ -125,7 +155,7 @@ export default {
         tree: [{
           id: 't4-1',
           name: '屏幕录制',
-          content: `<img class="float-r margin-l" src="../assets/rmedia/img/m01.jpg" alt="">
+          content: `<img class="float-r margin-l" src="./static/rmedia/img/m01.jpg" alt="">
           <ol>
             <li>
               <h4>录制模式</h4>
@@ -153,8 +183,8 @@ export default {
               <h4>音频录制设备</h4>
               <p>
                 当选择有声模式时，此项是必选的。通常情况下，电脑默认使用的设备是被禁用的。需要右击电脑右下方的小喇叭，选择录音设备，进入下左图窗口，右击，勾上“显示禁用的设备”。进入下右图，右击需要启用的设备，勾“启用”即可。</p>
-              <img src="../assets/rmedia/img/m02.jpg" style="width: 33%;" alt="">
-              <img src="../assets/rmedia/img/m03.jpg" style="width: 33%;" alt="">
+              <img src="./static/rmedia/img/m02.jpg" style="width: 33%;" alt="">
+              <img src="./static/rmedia/img/m03.jpg" style="width: 33%;" alt="">
               <p>启用之后，回到软件录制面板，点击【扫描录音设备】按钮，可用的设备将罗列在下拉菜单中，选择需要的设备。即可进行下一步。</p>
             </li>
             <li>
@@ -171,7 +201,7 @@ export default {
           id: 't4-2',
           name: 'PDF转图片',
           content: `<p>进入新的操作界面，有以下按钮如图。</p>
-          <img src="../assets/rmedia/img/m04.jpg" alt="">
+          <img src="./static/rmedia/img/m04.jpg" alt="">
           <p>【打开PDF】：是可批量输入处理的。</p>
           <p>【开始】：可直接点击开始入进转换状态，会把第一个PDF文档的每一页都单独打印为一张图片。</p>
           <p>
@@ -183,7 +213,7 @@ export default {
         }, {
           id: 't4-3',
           name: '图片拼接',
-          content: `<img src="../assets/rmedia/img/m05.jpg" alt="">
+          content: `<img src="./static/rmedia/img/m05.jpg" alt="">
           <p>非常简单，把所有要拼接的图片都打开进来，然后选择排列方式，勾选预览可以看到排列的结果。点击【确定】即输出为png图片。</p>
           <p>高级样式：如果懂css样式，也可以完全通过这里来操作布局。</p>
           <p>需要多尝试。</p>`
@@ -213,10 +243,100 @@ export default {
 </script>
 
 <style>
-.rmedia {
-  line-height: 1.6;
-  max-width: 1200px;
-  margin: 30px auto;
-  color: #6a737d;
-}
+  .letter{
+    display: inline-block;
+    font-weight: 900;
+    font-size: 100px;
+    position: relative;
+    color: #5f3d8a;
+    transform-style: preserve-3d;
+    perspective: 400px;
+    line-height: 1;
+    z-index: 1;
+  }
+  .letter:before, .letter:after{
+    position:absolute;
+    content: attr(data-letter);
+    transform-origin: top left;
+    top:0;
+    left:0;
+    display: block;
+    box-sizing: border-box;
+  }
+  .letter, .letter:before, .letter:after{
+    transition: all 0.3s ease-in-out;
+  }
+  .letter:before{
+    color: #fff;
+    text-shadow:
+      -1px 0px 1px rgba(255,255,255,.8),
+      1px 0px 1px rgba(0,0,0,.8);
+    z-index: 3;
+    transform:
+      rotateX(0deg)
+      rotateY(-15deg)
+      rotateZ(0deg);
+  }
+  .letter:after{
+    color: rgba(0,0,0,.11);
+    z-index:2;
+    transform:
+      scale(1.08,1)
+      rotateX(0deg)
+      rotateY(0deg)
+      rotateZ(0deg)
+      skew(0deg,1deg);
+    width: 100%;
+    height: 100%;
+  }
+  .letter:hover:before{
+    color: #fafafa;
+    transform:
+      rotateX(0deg)
+      rotateY(-40deg)
+      rotateZ(0deg);
+  }
+  .letter:hover:after{
+    transform:
+      scale(1.08,1)
+      rotateX(0deg)
+      rotateY(40deg)
+      rotateZ(0deg)
+      skew(0deg,22deg);
+  }
+  .rmedia-header{
+    background: linear-gradient(90deg, transparent, #573469 30%, transparent);
+  }
+  .rmedia-h1{
+    color: #48525b;
+    padding: 0 1em;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .rmedia-h1-v{
+    font-size: 28px;
+    color: #fff;
+    text-shadow: 1px 1px 2px #244c75;
+  }
+  .rmedia-main {
+    line-height: 1.6;
+    max-width: 1200px;
+    margin: 30px auto;
+    color: #6a737d;
+  }
+  .rmedia-h2,
+  .rmedia-h3{
+    color: #5899da;
+    font-weight: normal;
+  }
+  .tree-name{
+    cursor: pointer;
+    display: inline-block;
+  }
+  .tree-name:hover{
+    background: #eee;
+  }
+  .rmedia b{
+    color: #b970af;
+  }
 </style>

@@ -1,9 +1,7 @@
 <template>
   <ul class="tree">
     <li class="tree-item" v-for="(item, index) in tree" v-bind:key="index">
-      <div class="tree-name">
-        <a :href="'#'+item.id">{{item.name}}</a>
-      </div>
+      <div class="tree-name" v-html="item.name" v-bind:data-name="item.id"></div>
       <tree v-if="item.tree" :tree="item.tree"></tree>
     </li>
   </ul>
